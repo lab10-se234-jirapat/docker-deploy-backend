@@ -1,0 +1,8 @@
+version: '3.3'
+
+services:
+  backend:
+    image: jirapat66/234-deploylab-backend-update:latest
+    pull_policy: always
+    ports:
+      - "9999:8080"

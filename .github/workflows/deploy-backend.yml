@@ -3,7 +3,8 @@ name: Deploy backend to host
 on:
   push:
     branches:
-      - main
+      - update
+
 
 jobs:
   docker:
@@ -44,7 +45,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/234-deploylab-backend:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/234-deploylab-backend-update:latest
 
       - name: Copy file via SSH
         uses: appleboy/scp-action@v0.1.7
@@ -53,7 +54,7 @@ jobs:
           username: ${{ secrets.HOST_USER_NAME }}
           key: ${{ secrets.HOST_SSH_PRIVATE_KEY }}
           port: 22
-          source: "docker-compose.yml"
+          source: "docker-compose-prod.yml"
           target: "/home/ubuntu/backend"
 
       - name: Docker Compose
@@ -64,9 +65,10 @@ jobs:
           key: ${{ secrets.HOST_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/backend
+            cd /home/ubuntu/frontend
             echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
-            rm -rf /home/ubuntu/backend
+            docker compose -f docker-compose-prod.yml down  # Stops and removes the containers (if they exist)
+            docker compose -f docker-compose-prod.yml pull  # Pulls the updated Docker image
+            docker compose -f docker-compose-prod.yml up -d  # Starts the new containers on port 9999
+            rm -rf /home/ubuntu/frontend  # Removes the files from the server after deployment
+
