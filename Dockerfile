@@ -5,7 +5,7 @@ FROM openjdk:16-jdk-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 
 # Expose port 8080 for the application
-EXPOSE 9999
+EXPOSE 8080
 
 # Set environment variables
 ENV JAVA_PROFILE=prod
