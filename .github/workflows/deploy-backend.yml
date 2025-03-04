@@ -67,8 +67,8 @@ jobs:
           script: |
             cd /home/ubuntu/frontend
             echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-            docker compose -f docker-compose-prod.yml down  # Stops and removes the containers (if they exist)
-            docker compose -f docker-compose-prod.yml pull  # Pulls the updated Docker image
-            docker compose -f docker-compose-prod.yml up -d  # Starts the new containers on port 9999
-            rm -rf /home/ubuntu/frontend  # Removes the files from the server after deployment
+            docker compose -f docker-compose-prod.yml down  
+            docker compose -f docker-compose-prod.yml pull 
+            docker compose -f docker-compose-prod.yml up -d  
+            rm -rf /home/ubuntu/frontend 
 
